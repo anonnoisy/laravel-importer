@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import UploadExcelForm from "@/Components/Form/UploadExcelForm.vue";
+import { Head } from "@inertiajs/vue3";
 </script>
 
 <template>
@@ -8,7 +9,13 @@ import { Head } from '@inertiajs/vue3';
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+            <div class="flex justify-between">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Beranda
+                </h2>
+
+                <UploadExcelForm :url="route('upload')" />
+            </div>
         </template>
 
         <div class="py-12">
