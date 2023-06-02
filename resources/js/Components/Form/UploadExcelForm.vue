@@ -19,7 +19,7 @@ const confirmingDataUpload = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const form = useForm({
-    file: [],
+    file: null,
 });
 
 const confirmDataUpload = () => {
@@ -72,10 +72,9 @@ const closeModal = () => {
                     id="upload-file"
                     ref="fileInput"
                     v-model="form.file"
+                    accept="xlsx,xls"
                     class="mt-1 block w-full"
                 />
-
-                <InputHelp value="File harus XLSX" />
 
                 <InputError :message="form.errors.file" class="mt-2" />
             </div>
