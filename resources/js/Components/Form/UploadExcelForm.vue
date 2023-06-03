@@ -19,7 +19,7 @@ const confirmingDataUpload = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const form = useForm({
-    file: null,
+    excel: null,
 });
 
 const confirmDataUpload = () => {
@@ -31,6 +31,7 @@ const confirmDataUpload = () => {
 const uploadData = () => {
     form.post(props.url, {
         preserveScroll: true,
+        forceFormData: true,
         onSuccess: () => closeModal(),
         onError: () => fileInput.value?.focus(),
         onFinish: () => form.reset(),
@@ -71,12 +72,12 @@ const closeModal = () => {
                 <FileInput
                     id="upload-file"
                     ref="fileInput"
-                    v-model="form.file"
-                    accept="xlsx,xls"
+                    v-model="form.excel"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                     class="mt-1 block w-full"
                 />
 
-                <InputError :message="form.errors.file" class="mt-2" />
+                <InputError :message="form.errors.excel" class="mt-2" />
             </div>
 
             <div class="mt-6 flex justify-end">

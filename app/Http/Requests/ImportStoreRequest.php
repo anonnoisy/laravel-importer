@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UploadStoreRequest extends FormRequest
+class ImportStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,8 +21,9 @@ class UploadStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this->excel);
         return [
-            'file' => ['required', 'file', 'mimes:xlsx,xls']
+            'files' => ['required']
         ];
     }
 }

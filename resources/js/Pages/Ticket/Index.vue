@@ -15,7 +15,7 @@ import { Head } from "@inertiajs/vue3";
                 </h2>
 
                 <UploadExcelForm
-                    :url="route('upload')"
+                    :url="route('import')"
                     title="Pengunggahan Data Tiket"
                     btn-label="Unggah Data Tiket"
                 />

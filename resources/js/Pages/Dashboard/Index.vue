@@ -14,7 +14,7 @@ import { Head } from "@inertiajs/vue3";
                     Beranda
                 </h2>
 
-                <UploadExcelForm :url="route('upload')" />
+                <UploadExcelForm :url="route('import')" />
             </div>
         </template>
 
