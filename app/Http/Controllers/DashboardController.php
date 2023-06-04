@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -12,6 +13,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Dashboard/Index');
+        $sales = DB::table('sales')->paginate(15);
+        return Inertia::render('Dashboard/Index', [
+            'sales' => $sales
+        ]);
     }
 }
