@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Events\NotificationEvent;
 use App\Imports\BatchImport;
+use App\Libraries\Logger\ImportLogger;
+use App\Libraries\Logger\ImportLoggerStatus;
 use App\Libraries\Notification\Notification;
 use App\Libraries\Notification\NotificationStatus;
 use App\Models\User;
@@ -40,6 +42,13 @@ class ImportJob implements ShouldQueue
             $import->onlySheets('penjualan', 'barang', 'penjualan_detail', 'ticket', 'ticket_process');
             Excel::import($import, 'public/' . $this->file);
 
+            ImportLogger::build(
+                file: $this->file,
+                path: 'public/',
+                status: ImportLoggerStatus::DONE,
+                user: $this->user,
+            )->log();
+
             event(new NotificationEvent(
                 $this->user,
                 Notification::build(
@@ -49,6 +58,14 @@ class ImportJob implements ShouldQueue
                 )
             ));
         } catch (\Throwable $th) {
+            ImportLogger::build(
+                file: $this->file,
+                path: 'public/',
+                logMessage: $th->getMessage(),
+                status: ImportLoggerStatus::ERROR,
+                user: $this->user,
+            )->log();
+
             event(new NotificationEvent(
                 $this->user,
                 Notification::build(
