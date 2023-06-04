@@ -2,7 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Events\NotificationEvent;
 use App\Imports\BatchImport;
+use App\Libraries\Notification\Notification;
+use App\Libraries\Notification\NotificationStatus;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,13 +18,15 @@ class ImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected User $user;
     protected string $file;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(string $file)
+    public function __construct(User $user, string $file)
     {
+        $this->user = $user;
         $this->file = $file;
     }
 
@@ -29,8 +35,31 @@ class ImportJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $import = new BatchImport();
-        $import->onlySheets('penjualan', 'barang', 'penjualan_detail', 'ticket', 'ticket_process');
-        Excel::import($import, 'public/' . $this->file);
+        try {
+            $import = new BatchImport();
+            $import->onlySheets('penjualan', 'barang', 'penjualan_detail', 'ticket', 'ticket_process');
+            Excel::import($import, 'public/' . $this->file);
+
+            event(new NotificationEvent(
+                $this->user,
+                Notification::build(
+                    title: "Impor Data",
+                    message: "Berhasil mengimpor data.",
+                    status: NotificationStatus::SUCCESS,
+                )
+            ));
+        } catch (\Throwable $th) {
+            event(new NotificationEvent(
+                $this->user,
+                Notification::build(
+                    title: "Gagal Impor Data",
+                    message: $th->getMessage(),
+                    data: [
+                        $th
+                    ],
+                    status: NotificationStatus::ERROR,
+                )
+            ));
+        }
     }
 }

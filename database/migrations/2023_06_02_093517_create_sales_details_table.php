@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('invoice_number', 20)->index();
             $table->foreignId('product_id')->constrained('products');
             $table->unsignedInteger('qty');
-            $table->unsignedDecimal('weight', 4, 2);
+            $table->unsignedDecimal('weight', 8, 2);
             $table->unsignedDecimal('unit_price', 10, 2);
             $table->unsignedDecimal('discount', 2, 2);
             $table->unsignedDecimal('total_price', 10, 2);

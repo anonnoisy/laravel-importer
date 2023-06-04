@@ -17,13 +17,13 @@ class ProductSheet implements ToCollection, WithHeadingRow, WithBatchInserts
 	{
 		foreach ($rows as $row) {
 			DB::table('products')->upsert([
-				'id'					=> $row['id_produk'],
+				'id'										=> (int) $row['id_produk'],
 				'name'                  => $row['nama'],
-				'product_category_id'   => $row['id_kategori'],
-				'weight'                => $row['berat'],
-				'stock'                 => $row['stok'],
-				'purchase_price'        => $row['harga_beli'],
-				'sell_price'            => $row['harga_jual'],
+				'product_category_id'   => (int) $row['id_kategori'],
+				'weight'                => (float) $row['berat'],
+				'stock'                 => (int) $row['stok'],
+				'purchase_price'        => (float) $row['harga_beli'],
+				'sell_price'            => (float) $row['harga_jual'],
 				'created_at'            => date('Y-m-d H:i:s'),
 				'updated_at'            => date('Y-m-d H:i:s'),
 			], [

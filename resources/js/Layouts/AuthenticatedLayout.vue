@@ -5,9 +5,46 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
+import { POSITION, TYPE, useToast } from "vue-toastification";
+import Notification from "@/Components/Notification.vue";
+import { computed } from "vue";
 
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 const showingNavigationDropdown = ref(false);
+const toast = useToast();
+
+window.Echo.channel(`notifications.${user.value.id}`).listen(
+    "NotificationEvent",
+    (e: any) => {
+        const notification = e.notification;
+
+        const content = {
+            component: Notification,
+            props: {
+                title: notification.title,
+                message: notification.message,
+            },
+        };
+
+        toast(content, {
+            type: TYPE[notification.status as keyof typeof TYPE],
+            position: POSITION.TOP_RIGHT,
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: true,
+            closeButton: "button",
+            icon: true,
+            rtl: false,
+        });
+    }
+);
 </script>
 
 <template>

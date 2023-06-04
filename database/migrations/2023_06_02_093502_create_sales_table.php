@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_number', 20)->index();
-            $table->unsignedDecimal('weight_total', 5, 2);
+            $table->unsignedDecimal('weight_total', 8, 2);
             $table->unsignedDecimal('shipping_cost', 8, 2);
             $table->unsignedDecimal('total_price', 10, 2);
             $table->unsignedDecimal('total_purchase_price', 10, 2);

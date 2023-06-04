@@ -2,12 +2,12 @@
 
 namespace App\Imports\Sheets;
 
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SaleSheet implements ToCollection, WithHeadingRow, WithBatchInserts
 {
@@ -19,18 +19,18 @@ class SaleSheet implements ToCollection, WithHeadingRow, WithBatchInserts
         foreach ($rows as $row) {
             if (!empty($row['id_trx'])) {
                 DB::table('sales')->upsert([
-                    'id'                    => $row['id_trx'],
+                    'id'                    => (int) $row['id_trx'],
                     'invoice_number'        => $row['no_invoice'],
-                    'weight_total'          => $row['total_berat'],
-                    'shipping_cost'         => $row['ongkos_kirim'],
-                    'total_price'           => $row['total_harga'],
-                    'total_purchase_price'  => $row['total_harga_beli'],
-                    'customer_id'           => $row['kode_user'],
+                    'weight_total'          => (float) $row['total_berat'],
+                    'shipping_cost'         => (float) $row['ongkos_kirim'],
+                    'total_price'           => (float) $row['total_harga'],
+                    'total_purchase_price'  => (float) $row['total_harga_beli'],
+                    'customer_id'           => (int) $row['kode_user'],
                     'shipping_address'      => $row['alamat_penerima'],
-                    'shipping_service_id'   => $row['id_ekspedisi'],
+                    'shipping_service_id'   => (int) $row['id_ekspedisi'],
                     'shipping_type'         => $row['jenis_pengiriman'],
-                    'shipping_date'         => Carbon::parse($row['tgl_kirim'])->format('Y-m-d H:i:s'),
-                    'transaction_date'      => Carbon::parse($row['tgl_trx'])->format('Y-m-d H:i:s'),
+                    'shipping_date'         => Date::excelToDateTimeObject($row['tgl_kirim'])->format('Y-m-d H:i:s'),
+                    'transaction_date'      => Date::excelToDateTimeObject($row['tgl_trx'])->format('Y-m-d H:i:s'),
                     'created_at'            => date('Y-m-d H:i:s'),
                     'updated_at'            => date('Y-m-d H:i:s'),
                 ], [

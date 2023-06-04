@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->unsignedBigInteger('product_category_id')->index();
-            $table->unsignedDecimal('weight', 4, 2);
+            $table->unsignedDecimal('weight', 8, 2);
             $table->unsignedInteger('stock');
             $table->unsignedDecimal('purchase_price', 10, 2);
             $table->unsignedDecimal('sell_price', 10, 2);
