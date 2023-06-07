@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::get('/', [SalesController::class, 'index'])->name('index');
+        Route::get('/{invoice_number}', [SalesController::class, 'show'])->name('show');
     });
 
     Route::prefix('products')->name('products.')->group(function () {
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('tickets')->name('tickets.')->group(function () {
         Route::get('/', [TicketController::class, 'index'])->name('index');
+        Route::get('/{code}', [TicketController::class, 'show'])->name('show');
     });
 
     Route::post('/import', [ImportController::class, 'store'])->name('import');

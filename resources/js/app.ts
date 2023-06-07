@@ -7,6 +7,7 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import Toast from "vue-toastification";
+import VueTailwindDatepicker from "vue-tailwind-datepicker";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
@@ -26,6 +27,7 @@ createInertiaApp({
                 maxToasts: 20,
                 newestOnTop: true,
             })
+            .use(VueTailwindDatepicker)
             .use(ZiggyVue, Ziggy)
             .mount(el);
     },
