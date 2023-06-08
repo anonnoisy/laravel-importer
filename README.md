@@ -36,7 +36,7 @@
 -   Run `php artisan db:seed` it will be import data from `storage/app/dataset` (Optional)
 -   Run `npm install`
 
-Need a few terminal to run the services
+*   Need few new terminal to run the services
 
 -   Run `npm run dev`
 -   Run `php artisan serve`
