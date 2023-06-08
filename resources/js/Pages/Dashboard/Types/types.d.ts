@@ -5,6 +5,28 @@ type Statistic = {
     total_ticket: number;
 };
 
+type SalesChart = {
+    label: string;
+    series: SalesChartItem[];
+};
+
+type SalesChartItem = {
+    year: number;
+    month_number: number;
+    month: string;
+    total_purchase_price: string;
+};
+
+type SeriesItem = {
+    x: string;
+    y: string;
+};
+
+type Series = {
+    name: string;
+    data: SeriesItem[];
+};
+
 type Ticket = {
     code: string;
     customer_id: number;
@@ -27,4 +49,12 @@ type Sale = {
     transaction_date: string;
 };
 
-export { Statistic, Ticket, Sale };
+export {
+    Statistic,
+    SalesChart,
+    SalesChartItem,
+    Series,
+    SeriesItem,
+    Ticket,
+    Sale,
+};

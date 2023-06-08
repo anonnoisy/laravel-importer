@@ -45,7 +45,7 @@ defineProps<{
         </Card>
         <Card>
             <Stats
-                label="Total Tiket Masuk"
+                label="Total Tiket"
                 :value="statistic.total_ticket.toString()"
                 color="pink"
             >
