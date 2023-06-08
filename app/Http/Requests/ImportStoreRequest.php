@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class ImportStoreRequest extends FormRequest
 {
@@ -21,9 +22,23 @@ class ImportStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this->excel);
         return [
-            'files' => ['required']
+            'excel' => ['required', 'file']
         ];
+    }
+
+    /**
+     * Handle a passed validation attempt.
+     */
+    protected function passedValidation(): void
+    {
+        $file = $this->excel;
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public', $filename);
+
+        $this->merge([
+            'path' => 'public/',
+            'filename' => $filename,
+        ]);
     }
 }

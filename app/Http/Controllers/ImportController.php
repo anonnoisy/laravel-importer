@@ -9,34 +9,24 @@ use App\Libraries\Logger\ImportLogger;
 use App\Libraries\Logger\ImportLoggerStatus;
 use App\Libraries\Notification\Notification;
 use App\Libraries\Notification\NotificationStatus;
+use App\Repositories\ImportRepository;
 use Illuminate\Http\Request;
 
 class ImportController extends Controller
 {
+    private ImportRepository $importRepository;
+
+    public function __construct()
+    {
+        $this->importRepository = new ImportRepository();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ImportStoreRequest $request)
     {
-        $file = $request->excel;
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public', $filename);
-
-        ImportLogger::build(
-            file: $filename,
-            path: 'public/',
-        )->log();
-
-        event(new NotificationEvent(
-            auth()->user(),
-            Notification::build(
-                status: NotificationStatus::INFO,
-                title: "Impor Data",
-                message: "Sedang melakukan pengimporan data."
-            )
-        ));
-
-        ImportJob::dispatch(auth()->user(), $filename);
+        $this->importRepository->importing($request->path, $request->filename);
 
         return to_route('dashboard');
     }

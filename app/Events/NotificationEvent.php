@@ -14,13 +14,13 @@ class NotificationEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public User $user;
+    public User|null $user;
     public object $notification;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, Notification $notification)
+    public function __construct(Notification $notification, User|null $user = null)
     {
         $this->user = $user;
         $this->notification = $notification->getBody();

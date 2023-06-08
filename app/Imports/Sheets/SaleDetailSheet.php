@@ -23,6 +23,7 @@ class SaleDetailSheet implements ToCollection, WithHeadingRow, WithBatchInserts
 
             if (!empty($sale) && !empty($product)) {
                 DB::table('sale_details')->upsert([
+                    'id'                => (int) $row['id_trx_detail'],
                     'sale_id'           => (int) $row['id_trx'],
                     'invoice_number'    => $row['no_invoice'],
                     'product_id'        => (int) $row['id_produk'],
@@ -35,8 +36,6 @@ class SaleDetailSheet implements ToCollection, WithHeadingRow, WithBatchInserts
                     'updated_at'        => date('Y-m-d H:i:s'),
                 ], [
                     'id',
-                    'sale_id',
-                    'invoice_number',
                 ], [
                     'product_id',
                     'qty',

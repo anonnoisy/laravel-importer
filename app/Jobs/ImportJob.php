@@ -20,16 +20,18 @@ class ImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected User $user;
-    protected string $file;
+    protected User|null $user;
+    protected string $path;
+    protected string $filename;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(User $user, string $file)
+    public function __construct(string $path, string $filename, User|null $user = NULL)
     {
+        $this->path = $path;
+        $this->filename = $filename;
         $this->user = $user;
-        $this->file = $file;
     }
 
     /**
@@ -40,43 +42,48 @@ class ImportJob implements ShouldQueue
         try {
             $import = new BatchImport();
             $import->onlySheets('penjualan', 'barang', 'penjualan_detail', 'ticket', 'ticket_process');
-            Excel::import($import, 'public/' . $this->file);
+            Excel::import($import, $this->path . $this->filename);
 
-            ImportLogger::build(
-                file: $this->file,
-                path: 'public/',
-                status: ImportLoggerStatus::DONE,
-                user: $this->user,
-            )->log();
-
-            event(new NotificationEvent(
-                $this->user,
-                Notification::build(
+            if (!empty($this->user)) {
+                $this->logAndNotify(
                     title: "Impor Data",
-                    message: "Berhasil mengimpor data.",
-                    status: NotificationStatus::SUCCESS,
-                )
-            ));
+                    message: "Data telah berhasil diimport.",
+                    status: ImportLoggerStatus::DONE
+                );
+            }
         } catch (\Throwable $th) {
-            ImportLogger::build(
-                file: $this->file,
-                path: 'public/',
-                logMessage: $th->getMessage(),
-                status: ImportLoggerStatus::ERROR,
-                user: $this->user,
-            )->log();
-
-            event(new NotificationEvent(
-                $this->user,
-                Notification::build(
-                    title: "Gagal Impor Data",
+            if (!empty($this->user)) {
+                $this->logAndNotify(
+                    title: "Gagal mengimport data",
                     message: $th->getMessage(),
-                    data: [
-                        $th
-                    ],
-                    status: NotificationStatus::ERROR,
-                )
-            ));
+                    status: ImportLoggerStatus::ERROR
+                );
+            }
         }
+    }
+
+    private function logAndNotify(
+        string $title,
+        string $message,
+        ImportLoggerStatus $status = ImportLoggerStatus::DONE,
+        array $data = []
+    ) {
+        ImportLogger::build(
+            file: $this->filename,
+            path: $this->path,
+            logMessage: $message,
+            status: $status,
+            user: $this->user,
+        )->log();
+
+        event(new NotificationEvent(
+            Notification::build(
+                title: $title,
+                message: $message,
+                data: $data,
+                status: $status === ImportLoggerStatus::DONE ? NotificationStatus::SUCCESS : NotificationStatus::ERROR,
+            ),
+            $this->user
+        ));
     }
 }
