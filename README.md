@@ -45,7 +45,7 @@
 
 #### Query Question
 
--   Tampilkan hari, total transaksi, total perolehan, dimana total perolahan yang lebih dari 5 di hari itu
+-   Tampilkan hari, total transaksi, total perolehan, dimana total perolahan yang lebih dari 5 di hari itu:
 
 ` SELECT
     DATE_FORMAT(transaction_date, '%Y-%m-%d') hari,
