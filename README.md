@@ -42,3 +42,16 @@
 -   Run `php artisan serve`
 -   Run `php artisan websockets:serve`
 -   Run `php artisan queue:listen` or `php artisan queue:work`
+
+#### Query Question
+
+-   Tampilkan hari, total transaksi, total perolehan, dimana total perolahan yang lebih dari 5 di hari itu
+
+` SELECT
+    DATE_FORMAT(transaction_date, '%Y-%m-%d') hari,
+    COUNT(id) as total_transaksi,
+    SUM(total_purchase_price) AS total_perolehan
+  FROM sales
+  GROUP BY DATE_FORMAT(transaction_date, '%Y-%m-%d')
+  HAVING COUNT(id) > 5
+  ORDER BY hari DESC;`
